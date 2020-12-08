@@ -3,16 +3,17 @@ Autora: Suelene Mascarini
 Criacao:05.12.2020
 Ultima alteracao: 07.12.2020 
 objetivo: Responder teste da analise de dados da 4Intelligence
-OBS: Por segurança o caminho para abrir e salvar os arquivos.  foi omitido deixando indicado a programaçao
+OBS: Por segurança o caminho para abrir e salvar os arquivos foi omitido.
+Onde estiver referenciado 'caminho' substituir pelo diretório de trabalho.
+Nos lugares em que estão 'nomedoarquivo' escolha o nome do arquivo destino
 ============================================================================================================================ */
-
 
 /*======================================================================================================================
                                                     CASE 1
 ====================================================================================================================== */
 clear
 set mem 100m
-log using "caminho\Results.log", replace text
+log using "nomedoarquivo.log", replace text
 import delimited caminho\TFP.csv, encoding(UTF-8) 
 egen cntry = group(isocode)
 xtset cntry year
@@ -23,8 +24,8 @@ twoway line rtfpna year if isocode=="CAN" ||        ///
 	   line rtfpna year if isocode=="USA",         ///
 	   legend(col(3) lab(1 "CAN") lab(2 "MEX") lab(3 "USA")) ///
 	   title("Produtvidade Total do Fator a  preços constantes")
-graph save Graph "caminho.gph"	   
-graph export "caminho.tif", as(tif) replace
+graph save Graph "nomedoarquivo.gph"	   
+graph export "nomedoarquivo.tif", as(tif) replace
 caplog using Q1_4i.txt, replace:bysort isocode: xtsum rtfpna
 
 ***Prevendo
@@ -45,7 +46,7 @@ tsline TFP_`country'
 twoway line TFP_CAN year || ///
 	   line TFP_MEX year || ///
 	   line TFP_USA year , legend(col(3) lab(1 "CAN") lab(2 "MEX") lab(3 "USA"))
-graph export "caminho\FTP11_21.tif", as(tif) replace
+graph export "cnomedoarquivo.tif", as(tif) replace
 log close
 
 
@@ -54,9 +55,8 @@ log close
 ====================================================================================================================== */
 clear
 set mem 100m
-log using "caminho\nomedoarquivo.log", append text
+log using "nomedoarquivo.log", append text
 import delimited caminho\data_comexstat.csv, encoding(UTF-8)
-
 /*==========================================================================================*
 Q1. Show the evolution of total monthly and total annual exports from Brazil 
 (all states and to everywhere) of ‘soybeans’, ‘soybean oil’ and ‘soybean meal’
@@ -76,8 +76,8 @@ twoway line tonsBr_Milhoes mdate if (type=="Export" & product =="soybean_oil") |
 	   line tonsBr_Milhoes mdate if (type=="Export" & product =="soybeans"), 			///
 	   legend(col(3) lab(1 "Óleo de Soja") lab(2 "Farelo de Soja") lab(3 "Grão de Soja")) 		///
 	   xtitle("Mês/Ano") ytitle("Toneladas (Milhões)") title("Evolução das Exportações Brasileira")
-graph save Graph "caminho\nomegrafico.gph"
-graph export "caminho\nomegrafico.tif" as(tif) replace
+graph save Graph "nomedoarquivo.gph"
+graph export "nomedoarquivo.tif" as(tif) replace
 
 *Evolução Mensal em USD
 egen USDBR=total(usd)  , by(date product type)
@@ -87,8 +87,8 @@ twoway line USDBRBr_Bi mdate if (type=="Export" & product =="soybean_oil") || 		
 	   line USDBRBr_Bi mdate if (type=="Export" & product =="soybeans"), 			///
 	   legend(col(3) lab(1 "Óleo de Soja") lab(2 "Farelo de Soja") lab(3 "Grão de Soja")) 		///
 	   xtitle("Mês/Ano") ytitle("US$ (Bilhões)") title("Evolução das Exportações Brasileira")
-graph save Graph "caminho\nomegrafico.gph"
-graph export "caminho\nomegrafico.tif" as(tif) replace
+graph save Graph "nomedoarquivo.gph"
+graph export "nomedoarquivo.tif" as(tif) replace
 	   
 *Evolução Anual em Toneladas
 egen tonsBRy=total(tons), by(year product type)
@@ -98,8 +98,8 @@ twoway line tonsBry_Milhoes year if (type=="Export" & product =="soybean_oil")  
 	   line tonsBry_Milhoes year if (type=="Export" & product =="soybeans")      , 	///
 	   legend(col(3) lab(1 "Óleo de Soja") lab(2 "Farelo de Soja") lab(3 "Grão de Soja")) 		///
 	   xtitle("Ano") ytitle("Toneladas (Milhões)") title("Evolução das Exportações Brasileira")
-graph save Graph "caminho\nomegrafico.gph"
-graph export "caminho\nomegrafico.tif" as(tif) replace
+graph save Graph "nomedoarquivo.gph"
+graph export "nomedoarquivo.tif" as(tif) replace
 
 *Evolução Anual em USD
 egen USDBRy=total(usd)  , by(year product type)
@@ -109,8 +109,8 @@ twoway line USDBRy_Bi year if (type=="Export" & product =="soybean_oil") || 		  
 	   line USDBRy_Bi year if (type=="Export" & product =="soybeans"), 			          ///
 	   legend(col(3) lab(1 "Óleo de Soja") lab(2 "Farelo de Soja") lab(3 "Grão de Soja")) 	///
 	   xtitle("Ano") ytitle("US$ (Bilhões)") title("Evolução das Exportações Brasileira")
-graph save Graph "caminho\nomegrafico.gph"
-graph export "caminho\nomegrafico.tif" as(tif) replace
+graph save Graph "nomedoarquivo.gph"
+graph export "nomedoarquivo.tif" as(tif) replace
 	   
 /*==========================================================================================
 Q2.What are the 3 most important products exported by Brazil in the last 5 years? 
@@ -121,15 +121,15 @@ graph pie tons if (type=="Export" & year>2014), over(product)  sort descending  
 	  title("Participação dos produtos brasileiros nas exportações, no acumulado entre 2014 e 2019 (Ton)")  ///
 	  note("Elaboração própria com dados disponibilizados pela 4i")
 graph save Graph "caminho.gph", replace
-graph export "caminho.tif", as(tif) replace
+graph export "nomedoarquivo.tif", as(tif) replace
 
 graph pie usd if (type=="Export" & year>2014), over(product)  sort descending   ///
 	  plabel(_all percent, color(white) size(small) format(%2.1g)) intensity(inten80) ///
 	  plotregion(lstyle(none)) legend(on col(3)) ///
 	  title("Participação dos produtos brasileiros nas exportações, no acumulado entre 2014 e 2019 (US$)")  ///
-	  note("Elaboração própria com dados disponibilizados pela 4i")	  
+	  note("Elaboração própria com dados disponibilizados pela 4i )")	  
 graph save Graph "caminho.gph", replace
-graph export "caminho.tif", as(tif) replace
+graph export "nomedoarquivo.tif", as(tif) replace
 
 /*==========================================================================================
 Q3. What are the main routes through which Brazil have been exporting ‘corn’ in the last few 
@@ -140,14 +140,14 @@ graph hbar (sum) usd if (type=="Export" & year>2014 & product=="corn"), over(rou
 	  intensity(inten80) blabel(bar) legend(off) ///
 	  title("Rotas das Exportações de Milho")  ///
 	  note("Elaboração própria com dados disponibilizados pela 4i")
+graph export "nomedoarquivo.tif", as(tif) replace
 
 **comparativo
 egen S_usd_prod=sum(usd) if year>2014, by(product type)
 gen  Part=usd*100/S_usd_prod
 graph hbar (sum) Part if (type=="Export" & year>2014), over(route) missing ///
 	  by(product) intensity(inten80) legend(off) 
-graph export "caminho.tif", as(tif) replace
-
+graph export "nomedoarquivo.tif", as(tif) replace
 
 /*==========================================================================================
 Q4. Which countries have been the most important trade partners for Brazil in terms of 
@@ -165,8 +165,7 @@ drop month
 	
 foreach typ in Export Import {			
 foreach prod in corn sugar { 
-		caplog using Q4_4i.txt, append: table country year if (year>2016 & type=="`typ'" & ///
-		product=="`prod'"), c(sum usd) format(%11.0f) center row col
+		caplog using Q4_4i.txt, append: table country year if (year>2016 & type=="`typ'" & product=="`prod'"), c(sum usd) format(%11.0f) center row col
 		display _newline(5)
 			}	
 		}
@@ -181,6 +180,7 @@ reshape wide usd, i(state) j(product) string
 egen  usdtotal=rowtotal( usdcorn usdsoybean_meal usdsoybean_oil usdsoybeans usdsugar usdwheat) , missin
 export excel using "nomedoarquivo.xls", sheetreplace firstrow(variables)
 
+ 
 /*==========================================================================================
 Q6. 	Now, we ask you to show your modelling skills. Feel free to use any type of modelling 
 approach, but bear in mind that the modelling approach depends on the nature of your data, 
