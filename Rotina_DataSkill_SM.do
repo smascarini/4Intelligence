@@ -3,7 +3,7 @@ Autora: Suelene Mascarini
 Criacao:05.12.2020
 Ultima alteracao: 07.12.2020 
 objetivo: Responder teste da analise de dados da 4Intelligence
-OBS: Por segurança o caminho para abrir e salvar os arquivos foi omitido deixando indicado a programaçao
+OBS: Por segurança o caminho para abrir e salvar os arquivos.  foi omitido deixando indicado a programaçao
 ============================================================================================================================ */
 
 
@@ -31,7 +31,7 @@ caplog using Q1_4i.txt, replace:bysort isocode: xtsum rtfpna
 clear
 set mem 100m
 import delimited caminho\TFP.csv, encoding(UTF-8) 
-reshape wide rtfpna, i( year) j(isocode) string
+reshape wide rtfpna, i(year) j(isocode) string
 
 tsset year
 foreach country in CAN MEX USA{
@@ -127,7 +127,7 @@ graph pie usd if (type=="Export" & year>2014), over(product)  sort descending   
 	  plabel(_all percent, color(white) size(small) format(%2.1g)) intensity(inten80) ///
 	  plotregion(lstyle(none)) legend(on col(3)) ///
 	  title("Participação dos produtos brasileiros nas exportações, no acumulado entre 2014 e 2019 (US$)")  ///
-	  note("Elaboração própria com dados disponibilizados pela 4i )")	  
+	  note("Elaboração própria com dados disponibilizados pela 4i")	  
 graph save Graph "caminho.gph", replace
 graph export "caminho.tif", as(tif) replace
 
@@ -165,7 +165,8 @@ drop month
 	
 foreach typ in Export Import {			
 foreach prod in corn sugar { 
-		caplog using Q4_4i.txt, append: table country year if (year>2016 & type=="`typ'" & product=="`prod'"), c(sum usd) format(%11.0f) center row col
+		caplog using Q4_4i.txt, append: table country year if (year>2016 & type=="`typ'" & ///
+		product=="`prod'"), c(sum usd) format(%11.0f) center row col
 		display _newline(5)
 			}	
 		}
@@ -178,9 +179,8 @@ collapse (sum) usd, by( product state type)
 drop if type=="Import"
 reshape wide usd, i(state) j(product) string
 egen  usdtotal=rowtotal( usdcorn usdsoybean_meal usdsoybean_oil usdsoybeans usdsugar usdwheat) , missin
-export excel using "caminho.xls", sheetreplace firstrow(variables)
+export excel using "nomedoarquivo.xls", sheetreplace firstrow(variables)
 
- 
 /*==========================================================================================
 Q6. 	Now, we ask you to show your modelling skills. Feel free to use any type of modelling 
 approach, but bear in mind that the modelling approach depends on the nature of your data, 
